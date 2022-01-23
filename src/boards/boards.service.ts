@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { v1 as uuid } from 'uuid';
 
 import { BoardStatusEnumType, BoardType } from './boards.model';
@@ -16,7 +16,9 @@ export class BoardsService {
     const result = this.data.filter((board) => {
       return board.id === id;
     });
-
+    if (!result) {
+      throw new NotFoundException(`There is ${id}}`);
+    }
     return result;
   }
 
