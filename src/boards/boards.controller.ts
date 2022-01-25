@@ -14,7 +14,7 @@ import { CreateBoard } from './dto/create-board.dto';
 
 @Controller('boards')
 export class BoardsController {
-  constructor(private boardService: BoardsService) {}
+  constructor(private readonly boardService: BoardsService) {}
   @Get()
   getBoardAll(): BoardType[] {
     const result = this.boardService.getAllBoard();
