@@ -1,52 +1,46 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { v1 as uuid } from 'uuid';
+import { InjectRepository } from '@nestjs/typeorm';
 
-import { BoardStatusEnumType, BoardType } from './boards.model';
-import { CreateBoard } from './dto/create-board.dto';
+import { BoardStatusEnumType } from './boards.model';
+import { BoardRepository } from './boards.repository';
+import { CreateBoardDto } from './dto/create-board.dto';
+import { Board } from './boards.entity';
 
 @Injectable()
 export class BoardsService {
-  data: BoardType[] = [];
+  constructor(
+    @InjectRepository(BoardRepository)
+    private readonly boardRepository: BoardRepository,
+  ) {}
 
-  getAllBoard() {
-    return this.data;
-  }
-
-  getBoardById(id: string) {
-    const result = this.data.filter((board) => board.id === id);
-    /**
-     * @case1
-     * 일치하는 데이터가 없을 경우 데이터 반환 X
-     * const result = this.data.filter((board) => board.id === id);
-     *
-     * @case2
-     * 일치하는 데이터가 없을 경우 [] 빈배열을 반환
-     * const result = this.data.filter((board) => {
-     * return board.id === id;
-     * });
-     */
-    if (result) {
-      throw new NotFoundException(`There is ${id}}`);
-    }
+  createBoard(createBoard: CreateBoardDto) {
+    const result = this.boardRepository.createBoard(createBoard);
     return result;
   }
 
-  createBoard(board: CreateBoard) {
-    const { title, description } = board;
-    const inputData: BoardType = {
-      id: uuid(),
-      title,
-      description,
-      status: BoardStatusEnumType.PUBLIC,
-      createdAt: new Date(),
-    };
-    this.data.push(inputData);
-    return this.data;
+  async getBoardById(id: number): Promise<Board> {
+    const data = await this.boardRepository.findOne(id);
+    if (!data) {
+      throw new NotFoundException('');
+    }
+    return data;
   }
 
-  deleteBoardById(id: string) {
-    this.data = this.data.filter((board) => {
-      return board.id !== id;
-    });
+  getAllBoard() {
+    const data = this.boardRepository.requestBoard();
+    return data;
+  }
+
+  async updateBoard(id: number, status: BoardStatusEnumType) {
+    const board = await this.getBoardById(id);
+    board.status = status;
+
+    const result = this.boardRepository.save(board);
+    return result;
+  }
+
+  deleteBoard(id: number) {
+    const result = this.boardRepository.deleteBoard(id);
+    return result;
   }
 }
