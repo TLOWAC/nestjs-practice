@@ -1,10 +1,10 @@
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { BoardsModule } from './boards/boards.module';
+import { AppModule } from './app/app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(BoardsModule);
+  const app = await NestFactory.create(AppModule);
   const logger = new Logger();
 
   const options = new DocumentBuilder()
