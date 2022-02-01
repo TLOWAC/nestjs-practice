@@ -1,0 +1,14 @@
+version: "3.1"
+services:
+  postgres:
+    platform: linux/x86_64
+    image: postgres
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST_AUTH_METHOD: trust
+    container_name: postgres
+    ports:
+      - 5330:5432
+    
