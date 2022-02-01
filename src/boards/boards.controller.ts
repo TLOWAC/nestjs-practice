@@ -4,44 +4,58 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Post,
+  Put,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { BoardType } from './boards.model';
+import { BoardStatusEnumType } from './boards.model';
 import { BoardsService } from './boards.service';
-import { CreateBoard } from './dto/create-board.dto';
+import { CreateBoardDto } from './dto/create-board.dto';
+import { Board } from './boards.entity';
+import { BoardStatusValidationPipe } from './pipe/board-status-validation.pipe';
 
 @Controller('boards')
 export class BoardsController {
   constructor(private readonly boardService: BoardsService) {}
-  @Get()
-  getBoardAll(): BoardType[] {
-    const result = this.boardService.getAllBoard();
-    return result;
-  }
-
-  @Get(':id')
-  getBoardById(@Param('id') id: string) {
+  @Get('/:id')
+  getBoardById(@Param('id', ParseIntPipe) id: number): Promise<Board> {
     const result = this.boardService.getBoardById(id);
     return result;
   }
+  @Get()
+  getAllBoard() {
+    const data = this.boardService.getAllBoard();
+    return data;
+  }
 
   @Post()
-  @UsePipes(ValidationPipe)
-  createBoard(@Body() board: CreateBoard): BoardType[] {
-    const result = this.boardService.createBoard(board);
+  @UsePipes(ValidationPipe) // => CreateBoardDto 에서 class-validator 를 사용한 검증 과정을 handler 단에서 검증한다.
+  createBoard(@Body() createBoard: CreateBoardDto) {
+    const result = this.boardService.createBoard(createBoard);
     return result;
   }
 
-  @Delete(':id')
-  deleteBoardById(@Param('id') id: string) {
-    const result = this.boardService.deleteBoardById(id);
+  @Put('/:id/status')
+  updateBoardStatus(
+    @Param('id', ParseIntPipe) id: number,
+    @Body('status', BoardStatusValidationPipe) status: BoardStatusEnumType,
+  ) {
+    const result = this.boardService.updateBoard(id, status);
+    return result;
+  }
+
+  @Delete('/:id')
+  deleteBoard(@Param('id', ParseIntPipe) id: number) {
+    console.log('delete');
+    const result = this.boardService.deleteBoard(id);
+    return result;
   }
 }
 
 /**
- * 의문 1.
+ * 고려사항 1.
  * Controller 및 Service 의 함수에서 ReturnType 을 명시해줘야하는가?
  *
  * - 명시하는 경우
@@ -51,5 +65,5 @@ export class BoardsController {
  * - 명시하지 않는 경우
  * 문제가 되냐? 문제는 되지 않는다.
  * Typescript 가 ReturnType 을 자동으로 추론해줄것이기 때문입니다.
- * 하지만, 이경우에 ReturnType 을 확인하기 위해서는 별도의 접근 방법이 요구됩니다. ( ReturnType 이름 검색, Type.ts 파일 찾기)
+ * 하지만, 이경우에 ReturnType 을 확인하기 위해서는 별도의 접근 방법이 요구됩니다. ( ReturnType 이름 검색, Type.ts 파일 찾기 )
  */
