@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsOptional } from 'class-validator';
+
 import { BoardStatusEnumType } from '../boards.model';
 
 export class CreateBoardDto {

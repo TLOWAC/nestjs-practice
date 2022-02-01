@@ -1,4 +1,4 @@
-export { BoardType, BoardStatusEnumType };
+export { BoardStatusEnumType, BoardType };
 
 interface BoardType {
   id: string;

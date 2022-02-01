@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+
 import { BoardStatusEnumType } from './boards.model';
 
 @Entity()

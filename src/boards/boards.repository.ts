@@ -1,10 +1,9 @@
 import { NotFoundException } from '@nestjs/common';
 import { EntityRepository, Repository } from 'typeorm';
 
-import { CreateBoardDto } from './dto/create-board.dto';
 import { Board } from './boards.entity';
-
 import { BoardStatusEnumType } from './boards.model';
+import { CreateBoardDto } from './dto/create-board.dto';
 
 @EntityRepository(Board)
 export class BoardRepository extends Repository<Board> {

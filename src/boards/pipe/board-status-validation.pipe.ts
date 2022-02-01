@@ -3,6 +3,7 @@ import {
   BadRequestException,
   PipeTransform,
 } from '@nestjs/common';
+
 import { BoardStatusEnumType } from '../boards.model';
 
 export class BoardStatusValidationPipe implements PipeTransform {
