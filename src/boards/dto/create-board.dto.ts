@@ -1,11 +1,15 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsOptional } from 'class-validator';
+import { BoardStatusEnumType } from '../boards.model';
 
-export class CreateBoard {
+export class CreateBoardDto {
   @IsNotEmpty()
   title: string;
 
   @IsNotEmpty()
   description: string;
+
+  @IsOptional()
+  status: BoardStatusEnumType;
 }
 
 /**
