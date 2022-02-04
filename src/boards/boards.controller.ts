@@ -7,11 +7,14 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Req,
   UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { User } from 'src/auth/user.entity';
+import { GetUserOnRequest } from 'src/decorators/getUserOnRequest.decorator';
 
 import { Board } from './boards.entity';
 import { BoardStatusEnumType } from './boards.model';
@@ -25,19 +28,23 @@ export class BoardsController {
   constructor(private readonly boardService: BoardsService) {}
   @Get('/:id')
   getBoardById(@Param('id', ParseIntPipe) id: number): Promise<Board> {
-    const result = this.boardService.getBoardById(id);
+    const result = this.boardService.getOneBoardById(id);
     return result;
   }
   @Get()
-  getAllBoard() {
-    const data = this.boardService.getAllBoard();
+  getAllBoard(@Req() req) {
+    const { id } = req.user;
+    const data = this.boardService.getAllBoardById(id);
     return data;
   }
 
   @Post()
   @UsePipes(ValidationPipe) // => CreateBoardDto 에서 class-validator 를 사용한 검증 과정을 handler 단에서 검증한다.
-  createBoard(@Body() createBoard: CreateBoardDto) {
-    const result = this.boardService.createBoard(createBoard);
+  createBoard(
+    @Body() createBoard: CreateBoardDto,
+    @GetUserOnRequest() user: User,
+  ) {
+    const result = this.boardService.createBoard(createBoard, user);
     return result;
   }
 
@@ -52,7 +59,6 @@ export class BoardsController {
 
   @Delete('/:id')
   deleteBoard(@Param('id', ParseIntPipe) id: number) {
-    console.log('delete');
     const result = this.boardService.deleteBoard(id);
     return result;
   }

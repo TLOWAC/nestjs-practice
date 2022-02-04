@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/auth/user.entity';
 
 import { Board } from './boards.entity';
 import { BoardStatusEnumType } from './boards.model';
@@ -13,15 +14,26 @@ export class BoardsService {
     private readonly boardRepository: BoardRepository,
   ) {}
 
-  createBoard(createBoard: CreateBoardDto) {
-    const result = this.boardRepository.createBoard(createBoard);
+  createBoard(createBoard: CreateBoardDto, user: User) {
+    const result = this.boardRepository.createBoard(createBoard, user);
     return result;
   }
 
-  async getBoardById(id: number): Promise<Board> {
+  async getOneBoardById(id: number): Promise<Board> {
     const data = await this.boardRepository.findOne(id);
     if (!data) {
       throw new NotFoundException('');
+    }
+    return data;
+  }
+  async getAllBoardById(id: number): Promise<Board[]> {
+    const data = await this.boardRepository.find({
+      where: {
+        user: { id },
+      },
+    });
+    if (!data) {
+      throw new NotFoundException();
     }
     return data;
   }
@@ -32,7 +44,7 @@ export class BoardsService {
   }
 
   async updateBoard(id: number, status: BoardStatusEnumType) {
-    const board = await this.getBoardById(id);
+    const board = await this.getOneBoardById(id);
     board.status = status;
 
     const result = this.boardRepository.save(board);

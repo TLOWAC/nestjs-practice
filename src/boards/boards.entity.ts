@@ -1,8 +1,10 @@
+import { User } from 'src/auth/user.entity';
 import {
   BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -37,6 +39,9 @@ export class Board extends BaseEntity {
     name: 'updated_at',
   })
   updatedAt: Date;
+
+  @ManyToOne((type) => User, (user) => user.board, { eager: false })
+  user: User;
 }
 
 /**
