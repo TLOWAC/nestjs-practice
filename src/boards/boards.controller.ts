@@ -1,3 +1,4 @@
+import { GetUserOnRequest } from '@common';
 import {
   Body,
   Controller,
@@ -14,7 +15,6 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/auth/user.entity';
-import { GetUserOnRequest } from 'src/decorators/getUserOnRequest.decorator';
 
 import { Board } from './boards.entity';
 import { BoardStatusEnumType } from './boards.model';
