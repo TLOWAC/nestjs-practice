@@ -8,13 +8,15 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { UserRepository } from './user.repository';
 
+const ONE_HOUR = 60 * 60;
+
 @Module({
   imports: [
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
       secret: 'ch.lee',
       signOptions: {
-        expiresIn: 60 * 60,
+        expiresIn: ONE_HOUR,
       },
     }),
     TypeOrmModule.forFeature([UserRepository]),
