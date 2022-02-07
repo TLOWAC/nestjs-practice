@@ -28,6 +28,7 @@
     "db:sync": "typeorm schema:sync"
   },
   "dependencies": {
+    "@nestjs-modules/mailer": "^1.6.1",
     "@nestjs/common": "^8.0.0",
     "@nestjs/config": "^1.1.6",
     "@nestjs/core": "^8.0.0",
@@ -41,6 +42,7 @@
     "dotenv": "^14.2.0",
     "graphql": "^16.2.0",
     "jsonwebtoken": "^8.5.1",
+    "nodemailer": "^6.7.2",
     "passport": "^0.5.2",
     "passport-jwt": "^4.0.0",
     "pg": "^8.7.1",
@@ -63,6 +65,7 @@
     "@types/jest": "27.0.2",
     "@types/jsonwebtoken": "^8.5.8",
     "@types/node": "^16.0.0",
+    "@types/nodemailer": "^6.4.4",
     "@types/passport-jwt": "^3.0.6",
     "@types/supertest": "^2.0.11",
     "@types/swagger-ui-express": "^4.1.3",
