@@ -1,4 +1,5 @@
 import { Logger, ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
@@ -6,7 +7,7 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const logger = new Logger();
+  const config = app.get(ConfigService);
 
   const options = new DocumentBuilder()
     .setTitle('NestJS Realworld Example App')
@@ -40,7 +41,8 @@ async function bootstrap() {
   );
 
   await app.listen(3030, () => {
-    logger.log('server running on http://localhost:3030');
+    Logger.log(`server running on http://localhost:${config.get('port')}`);
+    Logger.log(`Running in ${config.get('environment')} mode`);
   });
 }
 bootstrap();
