@@ -24,6 +24,6 @@ export class User extends BaseEntity {
   @Column()
   password: string;
 
-  @OneToMany((type) => Board, (board) => board.user, { eager: true })
+  @OneToMany(() => Board, (board) => board.user, { eager: true })
   board: Board[];
 }
