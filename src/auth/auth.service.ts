@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcryptjs from 'bcryptjs';
 
-import { AuthCredentialDto } from './dto/auth-credential.dto';
+import { AuthCredentialDto, AuthSignUpDto } from './dto';
 import { UserRepository } from './user.repository';
 
 @Injectable()
@@ -14,11 +14,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  signUp(authCrendentialDto: AuthCredentialDto) {
-    const user = this.userRepository.createUser(authCrendentialDto);
-    return user;
-  }
-  // NOTE: Repository 에는 DB CRUD 등의 용도의 로직만을 사용
+  /* --------------------------------- 로그인 함수 --------------------------------- */
   async signIn(
     authCredentialDto: AuthCredentialDto,
   ): Promise<{ accessToken: string }> {
@@ -26,12 +22,14 @@ export class AuthService {
 
     const user = await this.userRepository.findOne({ username: username });
     const hashedPassword = user.password;
-
     const isMatch = bcryptjs.compareSync(password, hashedPassword);
 
     if (user && isMatch) {
-      // generate user token
-      const payload = { username };
+      const payload = {
+        username: username,
+        email: user.email,
+        role: user.role,
+      };
       const accessToken = this.jwtService.sign(payload);
 
       return { accessToken: accessToken };
@@ -40,8 +38,15 @@ export class AuthService {
     }
   }
 
-  async findOneByName(username: string) {
-    const user = this.userRepository.findOne({ username: username });
+  /* --------------------------------- 회원가입 함수 -------------------------------- */
+  /**
+   *
+   * @param authSignUpDto {}
+   * @returns
+   */
+  async signUp(authSignUpDto: AuthSignUpDto) {
+    console.log('authSignUpDto', authSignUpDto);
+    const user = await this.userRepository.createUser(authSignUpDto);
     return user;
   }
 }
