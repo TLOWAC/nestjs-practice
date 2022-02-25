@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 
-import { TaskService } from './scheduler.service';
+import { TaskService } from './task.service';
 
 @Module({
   imports: [],
