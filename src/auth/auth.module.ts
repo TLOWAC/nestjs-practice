@@ -14,7 +14,7 @@ const ONE_HOUR = 60 * 60;
   imports: [
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
-      secret: 'ch.lee',
+      secret: process.env.JWT_SECRET_KEY,
       signOptions: {
         expiresIn: ONE_HOUR,
       },
